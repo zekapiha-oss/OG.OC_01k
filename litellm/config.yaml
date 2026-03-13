@@ -7,6 +7,15 @@
 model_list:
 
   # ── ОСНОВНАЯ МОДЕЛЬ: Claude Sonnet 4.5 через Vertex AI ────
+  # Алиас "claude-sonnet" — для совместимости с OpenClaw / другими клиентами
+  - model_name: claude-sonnet
+    litellm_params:
+      model: vertex_ai/claude-sonnet-4-5@20250514
+      vertex_project: "gen-lang-client-0454675031"
+      vertex_location: "us-east5"
+      vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
+
+  # То же, под именем sonnet-4.5 (для прямых вызовов)
   - model_name: sonnet-4.5
     litellm_params:
       model: vertex_ai/claude-sonnet-4-5@20250514
@@ -14,27 +23,20 @@ model_list:
       vertex_location: "us-east5"
       vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
 
-  # ── ФОЛЛБЭК 1: Llama 3.3 70B (бесплатные квоты GCP) ──────
-  - model_name: llama-3.3
+  # ── ФОЛЛБЭК: Gemini 2.0 Flash (бесплатные квоты GCP, всегда доступен) ──
+  - model_name: gemini-flash
     litellm_params:
-      model: vertex_ai/llama-3.3-70b-instruct
-      vertex_project: "gen-lang-client-0454675031"
-      vertex_location: "us-central1"
-      vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
-
-  # ── ФОЛЛБЭК 2: Mixtral 8x7B (очень дёшево) ───────────────
-  - model_name: mixtral
-    litellm_params:
-      model: vertex_ai/mixtral-8x7b-instruct
+      model: vertex_ai/gemini-2.0-flash-001
       vertex_project: "gen-lang-client-0454675031"
       vertex_location: "us-central1"
       vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
 
 # ── ЛОГИКА ФОЛЛБЭКА ─────────────────────────────────────────
 router_settings:
-  # При ошибке / превышении квоты sonnet-4.5 → llama-3.3 → mixtral
+  # При ошибке / превышении квоты claude-sonnet → gemini-flash
   fallbacks:
-    - sonnet-4.5: ["llama-3.3", "mixtral"]
+    - claude-sonnet: ["gemini-flash"]
+    - sonnet-4.5: ["gemini-flash"]
 
   # Повторные попытки при временных ошибках
   num_retries: 3
