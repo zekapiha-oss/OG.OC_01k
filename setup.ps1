@@ -5,8 +5,8 @@
 # ============================================================
 
 param(
-    [string]$GcpProjectId  = "",   # передать через -GcpProjectId "your-project"
-    [string]$KeyPath       = "C:\Keys\vertex-sa.json",
+    [string]$GcpProjectId  = "gen-lang-client-0454675031",
+    [string]$KeyPath       = 'C:\Users\Евгений\OneDrive\Документи\kovalenko_ev\gen-lang-client-0454675031-a92bf51ffd4a.json',
     [string]$Domain        = "",   # ваш домен для Cloudflare
     [switch]$SkipAudit     = $false,
     [switch]$LaunchAll     = $false
