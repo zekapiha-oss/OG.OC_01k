@@ -12,6 +12,7 @@ model_list:
       model: vertex_ai/claude-sonnet-4-5@20250514
       vertex_project: "gen-lang-client-0454675031"
       vertex_location: "us-east5"
+      vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
 
   # ── ФОЛЛБЭК 1: Llama 3.3 70B (бесплатные квоты GCP) ──────
   - model_name: llama-3.3
@@ -19,6 +20,7 @@ model_list:
       model: vertex_ai/llama-3.3-70b-instruct
       vertex_project: "gen-lang-client-0454675031"
       vertex_location: "us-central1"
+      vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
 
   # ── ФОЛЛБЭК 2: Mixtral 8x7B (очень дёшево) ───────────────
   - model_name: mixtral
@@ -26,6 +28,7 @@ model_list:
       model: vertex_ai/mixtral-8x7b-instruct
       vertex_project: "gen-lang-client-0454675031"
       vertex_location: "us-central1"
+      vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
 
 # ── ЛОГИКА ФОЛЛБЭКА ─────────────────────────────────────────
 router_settings:
