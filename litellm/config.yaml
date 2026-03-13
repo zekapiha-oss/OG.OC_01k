@@ -1,0 +1,54 @@
+# ============================================================
+#  LiteLLM Gateway — OpenClaw с бюджетом GCP $199
+#  Редактируйте YOUR_PROJECT_ID перед запуском
+#  Запуск: litellm --config config.yaml --port 4000
+# ============================================================
+
+model_list:
+
+  # ── ОСНОВНАЯ МОДЕЛЬ: Claude Sonnet 4.5 через Vertex AI ────
+  - model_name: sonnet-4.5
+    litellm_params:
+      model: vertex_ai/claude-sonnet-4-5@20250514
+      vertex_project: "YOUR_PROJECT_ID"       # ← замените на ваш Project ID
+      vertex_location: "us-east5"
+
+  # ── ФОЛЛБЭК 1: Llama 3.3 70B (бесплатные квоты GCP) ──────
+  - model_name: llama-3.3
+    litellm_params:
+      model: vertex_ai/llama-3.3-70b-instruct
+      vertex_project: "YOUR_PROJECT_ID"
+      vertex_location: "us-central1"
+
+  # ── ФОЛЛБЭК 2: Mixtral 8x7B (очень дёшево) ───────────────
+  - model_name: mixtral
+    litellm_params:
+      model: vertex_ai/mixtral-8x7b-instruct
+      vertex_project: "YOUR_PROJECT_ID"
+      vertex_location: "us-central1"
+
+# ── ЛОГИКА ФОЛЛБЭКА ─────────────────────────────────────────
+router_settings:
+  # При ошибке / превышении квоты sonnet-4.5 → llama-3.3 → mixtral
+  fallbacks:
+    - sonnet-4.5: ["llama-3.3", "mixtral"]
+
+  # Повторные попытки при временных ошибках
+  num_retries: 3
+  retry_after: 5
+
+# ── БЮДЖЕТ ──────────────────────────────────────────────────
+litellm_settings:
+  # Жёсткий лимит: $199 на 3 месяца (до конца мая 2026)
+  max_budget: 199.00
+  budget_duration: "3mo"
+
+  # Логирование (опционально, для отладки)
+  set_verbose: false
+  drop_params: true      # игнорировать неподдерживаемые параметры
+
+# ── СЕРВЕР ──────────────────────────────────────────────────
+general_settings:
+  master_key: "sk-openclaw-local"   # OpenClaw должен использовать этот ключ
+  # Разрешаем только локальные подключения
+  # host: "127.0.0.1"   # раскомментировать для жёсткой блокировки внешних

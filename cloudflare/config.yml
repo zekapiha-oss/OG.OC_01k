@@ -1,0 +1,26 @@
+# ============================================================
+#  Cloudflare Tunnel — OpenClaw (iPhone + Telegram webhook)
+#  1. cloudflared tunnel login
+#  2. cloudflared tunnel create openclaw-tunnel
+#  3. Заполните TUNNEL_ID и YOUR_DOMAIN
+#  4. cloudflared tunnel run
+# ============================================================
+
+tunnel: YOUR_TUNNEL_ID                          # ← из: cloudflared tunnel list
+credentials-file: C:\Users\YOUR_USERNAME\.cloudflared\YOUR_TUNNEL_ID.json
+
+ingress:
+  # Web UI OpenClaw — доступ с iPhone через Safari
+  - hostname: agent.YOUR_DOMAIN.com             # ← ваш домен
+    service: http://localhost:18789             # порт UI OpenClaw
+
+  # Telegram webhook — принимает обновления от Telegram
+  - hostname: webhook.YOUR_DOMAIN.com           # ← ваш домен
+    service: http://localhost:3000              # порт Telegram-интеграции
+
+  # LiteLLM UI (опционально — мониторинг бюджета)
+  - hostname: litellm.YOUR_DOMAIN.com
+    service: http://localhost:4000
+
+  # Обязательный catch-all
+  - service: http_status:404
