@@ -4,7 +4,7 @@
 #  Данные: gen-lang-client-0454675031
 # ============================================================
 
-$GCP_PROJ   = 'mm-hub-pro-490014'
+$GCP_PROJ   = 'gen-lang-client-0454675031'
 # Читаем путь к ключу из переменной среды (устанавливается setup.ps1 или вручную)
 $KEY_PATH   = [System.Environment]::GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS","User")
 if (-not $KEY_PATH) { $KEY_PATH = $env:GOOGLE_APPLICATION_CREDENTIALS }

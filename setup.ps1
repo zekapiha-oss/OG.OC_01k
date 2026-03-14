@@ -5,7 +5,7 @@
 # ============================================================
 
 param(
-    [string]$GcpProjectId  = "mm-hub-pro-490014",
+    [string]$GcpProjectId  = "gen-lang-client-0454675031",
     [string]$KeyPath       = "",   # путь к JSON-ключу SA; пусто = использовать ADC (gcloud auth application-default login)
     [string]$Domain        = "",   # ваш домен для Cloudflare
     [switch]$SkipAudit     = $false,

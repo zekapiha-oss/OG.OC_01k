@@ -6,13 +6,13 @@ color 0A
 echo.
 echo ╔══════════════════════════════════════════════════════════╗
 echo ║     OpenClaw + LiteLLM + GCP — Автозапуск             ║
-echo ║     Project: mm-hub-pro-490014                         ║
+echo ║     Project: gen-lang-client-0454675031                         ║
 echo ╚══════════════════════════════════════════════════════════╝
 echo.
 
 :: Путь к папке проекта (текущая папка)
 set "PROJ_DIR=%~dp0"
-set "GCP_PROJECT=mm-hub-pro-490014"
+set "GCP_PROJECT=gen-lang-client-0454675031"
 set "LITELLM_CONFIG=%PROJ_DIR%litellm\config.yaml"
 
 echo [1/6] Проверка прав администратора...
@@ -95,7 +95,7 @@ echo   API Key: sk-openclaw-local
 echo   UI:      http://127.0.0.1:4000/ui
 echo.
 
-start "LiteLLM Gateway" cmd /k "echo LiteLLM Gateway — mm-hub-pro-490014 && echo. && litellm --config "%LITELLM_CONFIG%" --port 4000"
+start "LiteLLM Gateway" cmd /k "echo LiteLLM Gateway — gen-lang-client-0454675031 && echo. && litellm --config "%LITELLM_CONFIG%" --port 4000"
 
 timeout /t 5 /nobreak >nul
 
