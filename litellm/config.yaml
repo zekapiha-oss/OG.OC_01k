@@ -10,19 +10,19 @@
 
 model_list:
 
-  # -- PRIMARY: Claude 3.5 Sonnet via Vertex AI --
+  # -- PRIMARY: Claude Sonnet 4.5 via Vertex AI (global) --
   - model_name: claude-sonnet
     litellm_params:
-      model: vertex_ai/claude-3-5-sonnet@20241022
+      model: vertex_ai/claude-sonnet-4-5@20250929
       vertex_project: "gen-lang-client-0454675031"
-      vertex_location: "us-east5"
+      vertex_location: "global"
       vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
   - model_name: sonnet-4.5
     litellm_params:
-      model: vertex_ai/claude-3-5-sonnet@20241022
+      model: vertex_ai/claude-sonnet-4-5@20250929
       vertex_project: "gen-lang-client-0454675031"
-      vertex_location: "us-east5"
+      vertex_location: "global"
       vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
   # -- FALLBACK: Gemini 1.5 Flash --
