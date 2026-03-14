@@ -1,59 +1,55 @@
 # ============================================================
-#  LiteLLM Gateway — OpenClaw с бюджетом GCP $199
+#  LiteLLM Gateway - OpenClaw + GCP budget $199
 #  Project: gen-lang-client-0454675031
-#  Запуск: litellm --config config.yaml --port 4000
+#  Start: litellm --config config.yaml --port 4000
+# ============================================================
+#
+#  Credentials: set GOOGLE_APPLICATION_CREDENTIALS env variable
+#  (already configured by check_all.ps1 / setup.ps1)
 # ============================================================
 
 model_list:
 
-  # ── ОСНОВНАЯ МОДЕЛЬ: Claude Sonnet 4.5 через Vertex AI ────
-  # Алиас "claude-sonnet" — для совместимости с OpenClaw / другими клиентами
+  # -- PRIMARY: Claude Sonnet 4.5 via Vertex AI --
   - model_name: claude-sonnet
     litellm_params:
       model: vertex_ai/claude-sonnet-4-5@20250514
       vertex_project: "gen-lang-client-0454675031"
       vertex_location: "us-east5"
-      vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
+      vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
-  # То же, под именем sonnet-4.5 (для прямых вызовов)
+  # Alias sonnet-4.5 (for direct calls)
   - model_name: sonnet-4.5
     litellm_params:
       model: vertex_ai/claude-sonnet-4-5@20250514
       vertex_project: "gen-lang-client-0454675031"
       vertex_location: "us-east5"
-      vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
+      vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
-  # ── ФОЛЛБЭК: Gemini 2.0 Flash (бесплатные квоты GCP, всегда доступен) ──
+  # -- FALLBACK: Gemini 2.0 Flash (free GCP quota) --
   - model_name: gemini-flash
     litellm_params:
       model: vertex_ai/gemini-2.0-flash-001
       vertex_project: "gen-lang-client-0454675031"
       vertex_location: "us-central1"
-      vertex_credentials: "C:\\Users\\Евгений\\OneDrive\\Документи\\kovalenko_ev\\gen-lang-client-0454675031-a92bf51ffd4a.json"
+      vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
-# ── ЛОГИКА ФОЛЛБЭКА ─────────────────────────────────────────
+# -- FALLBACK LOGIC --
 router_settings:
-  # При ошибке / превышении квоты claude-sonnet → gemini-flash
   fallbacks:
     - claude-sonnet: ["gemini-flash"]
     - sonnet-4.5: ["gemini-flash"]
-
-  # Повторные попытки при временных ошибках
   num_retries: 3
   retry_after: 5
 
-# ── БЮДЖЕТ ──────────────────────────────────────────────────
+# -- BUDGET --
 litellm_settings:
-  # Жёсткий лимит: $199 на 3 месяца (до конца мая 2026)
   max_budget: 199.00
   budget_duration: "3mo"
-
-  # Логирование (опционально, для отладки)
   set_verbose: false
-  drop_params: true      # игнорировать неподдерживаемые параметры
+  drop_params: true
 
-# ── СЕРВЕР ──────────────────────────────────────────────────
+# -- SERVER --
 general_settings:
-  master_key: "sk-openclaw-local"   # OpenClaw должен использовать этот ключ
-  # Разрешаем только локальные подключения
-  # host: "127.0.0.1"   # раскомментировать для жёсткой блокировки внешних
+  master_key: "sk-openclaw-local"
+  # host: "127.0.0.1"   # uncomment to block external connections
