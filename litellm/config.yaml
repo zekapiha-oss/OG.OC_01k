@@ -1,16 +1,6 @@
-# ============================================================
-#  LiteLLM Gateway - OpenClaw + GCP budget $199
-#  Project: mm-hub-pro-490014
-#  Start: litellm --config config.yaml --port 4000
-# ============================================================
-#
-#  Credentials: GOOGLE_APPLICATION_CREDENTIALS env variable
-#  Points to: %APPDATA%\gcloud\application_default_credentials.json
-# ============================================================
-
 model_list:
 
-  # -- PRIMARY: Claude Sonnet 4.5 via Vertex AI (global) --
+  # -- PRIMARY: Claude Sonnet 4.5 via Vertex AI --
   - model_name: claude-sonnet
     litellm_params:
       model: vertex_ai/claude-sonnet-4-5@20250929
@@ -25,15 +15,12 @@ model_list:
       vertex_location: "global"
       vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
-  # -- FALLBACK: Gemini 2.0 Flash --
+  # -- FALLBACK: Gemini 2.5 Flash via Google AI API --
   - model_name: gemini-flash
     litellm_params:
-      model: vertex_ai/gemini-2.0-flash
-      vertex_project: "mm-hub-pro-490014"
-      vertex_location: "us-central1"
-      vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
+      model: gemini/gemini-2.5-flash
+      api_key: "os.environ/GEMINI_API_KEY"
 
-# -- FALLBACK LOGIC --
 router_settings:
   fallbacks:
     - claude-sonnet: ["gemini-flash"]
@@ -41,13 +28,11 @@ router_settings:
   num_retries: 3
   retry_after: 5
 
-# -- BUDGET --
 litellm_settings:
   max_budget: 199.00
   budget_duration: "3mo"
   set_verbose: false
   drop_params: true
 
-# -- SERVER --
 general_settings:
   master_key: "sk-openclaw-local"
