@@ -133,27 +133,31 @@ if (-not $GcpProjectId) {
 
 $configContent = @"
 model_list:
+  - model_name: claude-sonnet
+    litellm_params:
+      model: vertex_ai/claude-sonnet-4-5@20250514
+      vertex_project: "$GcpProjectId"
+      vertex_location: "us-east5"
+      vertex_credentials: "$KeyPath"
+
   - model_name: sonnet-4.5
     litellm_params:
       model: vertex_ai/claude-sonnet-4-5@20250514
       vertex_project: "$GcpProjectId"
       vertex_location: "us-east5"
+      vertex_credentials: "$KeyPath"
 
-  - model_name: llama-3.3
+  - model_name: gemini-flash
     litellm_params:
-      model: vertex_ai/llama-3.3-70b-instruct
+      model: vertex_ai/gemini-2.0-flash-001
       vertex_project: "$GcpProjectId"
       vertex_location: "us-central1"
-
-  - model_name: mixtral
-    litellm_params:
-      model: vertex_ai/mixtral-8x7b-instruct
-      vertex_project: "$GcpProjectId"
-      vertex_location: "us-central1"
+      vertex_credentials: "$KeyPath"
 
 router_settings:
   fallbacks:
-    - sonnet-4.5: ["llama-3.3", "mixtral"]
+    - claude-sonnet: ["gemini-flash"]
+    - sonnet-4.5: ["gemini-flash"]
   num_retries: 3
 
 litellm_settings:
