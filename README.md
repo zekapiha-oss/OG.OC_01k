@@ -9,10 +9,12 @@
 
 ```
 OG.OC_01k/
+├── ЗАПУСТИТЬ_МЕНЯ.bat    # Быстрый запуск одним кликом (от Администратора)
 ├── audit_pc.ps1          # Аудит ПК — запустить ПЕРВЫМ
-├── setup.ps1             # Мастер-скрипт установки
+├── setup.ps1             # Мастер-скрипт установки и настройки
+├── check_all.ps1         # Полная проверка всех компонентов
 ├── litellm/
-│   └── config.yaml       # Конфиг LiteLLM (шаблон, заполняется setup.ps1)
+│   └── config.yaml       # Конфиг LiteLLM (проект: mm-hub-pro-490014)
 ├── cloudflare/
 │   └── config.yml        # Шаблон Cloudflare Tunnel конфига
 └── Настройка OpenClaw с бюджетом GCP.pdf
@@ -42,12 +44,20 @@ gcloud services enable aiplatform.googleapis.com --project YOUR_PROJECT_ID
 ### Шаг 2 — Установка и настройка
 ```powershell
 # PowerShell от Администратора
+
+# Вариант A: ADC (Application Default Credentials — рекомендуется)
+gcloud auth application-default login
+.\setup.ps1
+
+# Вариант B: Service Account JSON-ключ
 .\setup.ps1 -GcpProjectId "ваш-project-id" -KeyPath "C:\Keys\vertex-sa.json"
 ```
 
 ### Шаг 3 — Запуск всего
 ```powershell
-.\setup.ps1 -GcpProjectId "ваш-project-id" -LaunchAll
+.\setup.ps1 -LaunchAll
+# Или одним кликом (от Администратора):
+# ЗАПУСТИТЬ_МЕНЯ.bat
 ```
 
 ### Настройки OpenClaw

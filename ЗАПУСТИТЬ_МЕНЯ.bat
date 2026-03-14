@@ -6,14 +6,13 @@ color 0A
 echo.
 echo ╔══════════════════════════════════════════════════════════╗
 echo ║     OpenClaw + LiteLLM + GCP — Автозапуск             ║
-echo ║     Project: gen-lang-client-0454675031                ║
+echo ║     Project: mm-hub-pro-490014                         ║
 echo ╚══════════════════════════════════════════════════════════╝
 echo.
 
 :: Путь к папке проекта (текущая папка)
 set "PROJ_DIR=%~dp0"
-set "KEY_PATH=C:\Users\Евгений\OneDrive\Документи\kovalenko_ev\gen-lang-client-0454675031-a92bf51ffd4a.json"
-set "GCP_PROJECT=gen-lang-client-0454675031"
+set "GCP_PROJECT=mm-hub-pro-490014"
 set "LITELLM_CONFIG=%PROJ_DIR%litellm\config.yaml"
 
 echo [1/6] Проверка прав администратора...
@@ -29,18 +28,14 @@ if %errorLevel% neq 0 (
 echo   OK
 
 echo.
-echo [2/6] Настройка переменной GOOGLE_APPLICATION_CREDENTIALS...
-if not exist "%KEY_PATH%" (
-    echo   ОШИБКА: Файл ключа не найден:
-    echo   %KEY_PATH%
-    echo.
-    echo   Проверьте путь и перезапустите.
-    pause
-    exit /b 1
+echo [2/6] Проверка GOOGLE_APPLICATION_CREDENTIALS...
+if defined GOOGLE_APPLICATION_CREDENTIALS (
+    echo   OK: GOOGLE_APPLICATION_CREDENTIALS=%GOOGLE_APPLICATION_CREDENTIALS%
+) else (
+    echo   ВНИМАНИЕ: GOOGLE_APPLICATION_CREDENTIALS не задана.
+    echo   Используются Application Default Credentials (ADC).
+    echo   Если нужен SA-ключ — запустите сначала setup.ps1 -KeyPath "C:\path\to\key.json"
 )
-setx GOOGLE_APPLICATION_CREDENTIALS "%KEY_PATH%" >nul 2>&1
-set GOOGLE_APPLICATION_CREDENTIALS=%KEY_PATH%
-echo   OK: %KEY_PATH%
 
 echo.
 echo [3/6] Проверка Python и установка LiteLLM...
@@ -100,7 +95,7 @@ echo   API Key: sk-openclaw-local
 echo   UI:      http://127.0.0.1:4000/ui
 echo.
 
-start "LiteLLM Gateway" cmd /k "echo LiteLLM Gateway — gen-lang-client-0454675031 && echo. && litellm --config "%LITELLM_CONFIG%" --port 4000"
+start "LiteLLM Gateway" cmd /k "echo LiteLLM Gateway — mm-hub-pro-490014 && echo. && litellm --config "%LITELLM_CONFIG%" --port 4000"
 
 timeout /t 5 /nobreak >nul
 

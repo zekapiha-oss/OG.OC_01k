@@ -4,8 +4,10 @@
 #  Данные: gen-lang-client-0454675031
 # ============================================================
 
-$KEY_PATH   = 'C:\Users\Евгений\OneDrive\Документи\kovalenko_ev\gen-lang-client-0454675031-a92bf51ffd4a.json'
-$GCP_PROJ   = 'gen-lang-client-0454675031'
+$GCP_PROJ   = 'mm-hub-pro-490014'
+# Читаем путь к ключу из переменной среды (устанавливается setup.ps1 или вручную)
+$KEY_PATH   = [System.Environment]::GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS","User")
+if (-not $KEY_PATH) { $KEY_PATH = $env:GOOGLE_APPLICATION_CREDENTIALS }
 $PROJ_DIR   = $PSScriptRoot
 $LITELLM_CFG = "$PROJ_DIR\litellm\config.yaml"
 
@@ -93,33 +95,31 @@ if (Get-Command gcloud -ErrorAction SilentlyContinue) {
 }
 
 # ── 5. JSON-КЛЮЧ ─────────────────────────────────────────────
-HDR 5 "JSON-КЛЮЧ СЕРВИСНОГО АККАУНТА"
-INFO "Путь: $KEY_PATH"
-if (Test-Path $KEY_PATH) {
-    OK "Файл найден"
-    try {
-        $json = Get-Content $KEY_PATH | ConvertFrom-Json
-        OK "project_id   : $($json.project_id)"
-        OK "client_email : $($json.client_email)"
-        OK "type         : $($json.type)"
-        if ($json.project_id -ne $GCP_PROJ) {
-            WARN "ВНИМАНИЕ: project_id в ключе ($($json.project_id)) ≠ $GCP_PROJ"
-        }
-    } catch { WARN "Не удалось разобрать JSON" }
+HDR 5 "JSON-КЛЮЧ / APPLICATION DEFAULT CREDENTIALS"
+if ($KEY_PATH) {
+    INFO "GOOGLE_APPLICATION_CREDENTIALS: $KEY_PATH"
+    if (Test-Path $KEY_PATH) {
+        OK "Файл ключа найден"
+        try {
+            $json = Get-Content $KEY_PATH | ConvertFrom-Json
+            OK "project_id   : $($json.project_id)"
+            OK "client_email : $($json.client_email)"
+            OK "type         : $($json.type)"
+            if ($json.project_id -ne $GCP_PROJ) {
+                WARN "ВНИМАНИЕ: project_id в ключе ($($json.project_id)) ≠ $GCP_PROJ"
+                WARN "Если используется ADC для $GCP_PROJ — это нормально."
+            }
+        } catch { WARN "Не удалось разобрать JSON" }
+    } else {
+        WARN "GOOGLE_APPLICATION_CREDENTIALS задана, но файл не найден: $KEY_PATH"
+        INFO "Возможно используются ADC (gcloud auth application-default login) — проверьте:"
+        INFO "  gcloud auth application-default print-access-token"
+    }
 } else {
-    ERR "ФАЙЛ НЕ НАЙДЕН: $KEY_PATH"
-    INFO "Проверьте путь к ключу!"
-    exit 1
-}
-
-# Устанавливаем переменную среды
-$cur = [System.Environment]::GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS","User")
-if ($cur -ne $KEY_PATH) {
-    [System.Environment]::SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", $KEY_PATH, "User")
-    $env:GOOGLE_APPLICATION_CREDENTIALS = $KEY_PATH
-    OK "GOOGLE_APPLICATION_CREDENTIALS установлена"
-} else {
-    OK "GOOGLE_APPLICATION_CREDENTIALS уже задана"
+    WARN "GOOGLE_APPLICATION_CREDENTIALS не задана"
+    INFO "Используются Application Default Credentials (ADC)"
+    INFO "Проверьте: gcloud auth application-default print-access-token"
+    INFO "Если нужен SA-ключ — запустите: .\setup.ps1 -KeyPath 'C:\path\to\key.json'"
 }
 
 # ── 6. CLOUDFLARED ───────────────────────────────────────────

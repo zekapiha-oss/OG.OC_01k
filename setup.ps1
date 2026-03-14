@@ -5,11 +5,12 @@
 # ============================================================
 
 param(
-    [string]$GcpProjectId  = "gen-lang-client-0454675031",
-    [string]$KeyPath       = 'C:\Users\Евгений\OneDrive\Документи\kovalenko_ev\gen-lang-client-0454675031-a92bf51ffd4a.json',
+    [string]$GcpProjectId  = "mm-hub-pro-490014",
+    [string]$KeyPath       = "",   # путь к JSON-ключу SA; пусто = использовать ADC (gcloud auth application-default login)
     [string]$Domain        = "",   # ваш домен для Cloudflare
     [switch]$SkipAudit     = $false,
-    [switch]$LaunchAll     = $false
+    [switch]$LaunchAll     = $false,
+    [switch]$Force         = $false  # перезаписать config.yaml даже если уже существует
 )
 
 $ErrorActionPreference = "Stop"
@@ -131,46 +132,58 @@ if (-not $GcpProjectId) {
     $GcpProjectId = Read-Host "Введите GCP Project ID"
 }
 
-$configContent = @"
+if ((Test-Path $configFile) -and -not $Force) {
+    OK "config.yaml уже существует: $configFile (пропускаем генерацию)"
+    INFO "Используйте -Force для принудительной перезаписи"
+} else {
+    $credsValue = if ($KeyPath) { $KeyPath } else { "os.environ/GOOGLE_APPLICATION_CREDENTIALS" }
+
+    $configContent = @"
 model_list:
+
+  # -- PRIMARY: Claude Sonnet 4.5 via Vertex AI --
   - model_name: claude-sonnet
     litellm_params:
-      model: vertex_ai/claude-sonnet-4-5@20250514
+      model: vertex_ai/claude-sonnet-4-5@20250929
       vertex_project: "$GcpProjectId"
-      vertex_location: "us-east5"
-      vertex_credentials: "$KeyPath"
+      vertex_location: "global"
+      vertex_credentials: "$credsValue"
 
   - model_name: sonnet-4.5
     litellm_params:
-      model: vertex_ai/claude-sonnet-4-5@20250514
+      model: vertex_ai/claude-sonnet-4-5@20250929
       vertex_project: "$GcpProjectId"
-      vertex_location: "us-east5"
-      vertex_credentials: "$KeyPath"
+      vertex_location: "global"
+      vertex_credentials: "$credsValue"
 
+  # -- FALLBACK: Gemini 2.0 Flash via Vertex AI --
   - model_name: gemini-flash
     litellm_params:
       model: vertex_ai/gemini-2.0-flash-001
       vertex_project: "$GcpProjectId"
       vertex_location: "us-central1"
-      vertex_credentials: "$KeyPath"
+      vertex_credentials: "$credsValue"
 
 router_settings:
   fallbacks:
     - claude-sonnet: ["gemini-flash"]
     - sonnet-4.5: ["gemini-flash"]
   num_retries: 3
+  retry_after: 5
 
 litellm_settings:
   max_budget: 199.00
   budget_duration: "3mo"
+  set_verbose: false
   drop_params: true
 
 general_settings:
   master_key: "sk-openclaw-local"
 "@
 
-Set-Content -Path $configFile -Value $configContent
-OK "Конфиг записан: $configFile"
+    Set-Content -Path $configFile -Value $configContent
+    OK "Конфиг записан: $configFile"
+}
 
 # ── ШАГ 5: ПРОВЕРКА GCP Vertex AI ────────────────────────────
 Step 5 "Проверка Vertex AI API в GCP"

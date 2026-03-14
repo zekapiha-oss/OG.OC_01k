@@ -158,8 +158,10 @@ foreach ($name in $procs) {
 # ── 10. LITELLM CONFIG ──────────────────────────────────────
 Section "10. LITELLM CONFIG.YAML"
 $litellmPaths = @(
-    ".\config.yaml",
+    "$PSScriptRoot\litellm\config.yaml",
+    ".\litellm\config.yaml",
     "$PSScriptRoot\config.yaml",
+    ".\config.yaml",
     "$env:USERPROFILE\litellm\config.yaml",
     "C:\litellm\config.yaml"
 )
