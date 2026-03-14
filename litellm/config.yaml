@@ -28,9 +28,9 @@ model_list:
   # -- FALLBACK: Gemini 1.5 Flash --
   - model_name: gemini-flash
     litellm_params:
-      model: vertex_ai/gemini-1.5-flash
+      model: vertex_ai/gemini-2.0-flash
       vertex_project: "gen-lang-client-0454675031"
-      vertex_location: "us-central1"
+      vertex_location: "global"
       vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
 # -- FALLBACK LOGIC --
