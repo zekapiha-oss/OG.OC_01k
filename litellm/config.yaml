@@ -1,11 +1,11 @@
 # ============================================================
 #  LiteLLM Gateway - OpenClaw + GCP budget $199
-#  Project: gen-lang-client-0454675031
+#  Project: mm-hub-pro-490014
 #  Start: litellm --config config.yaml --port 4000
 # ============================================================
 #
-#  Credentials: set GOOGLE_APPLICATION_CREDENTIALS env variable
-#  (already configured by check_all.ps1 / setup.ps1)
+#  Credentials: GOOGLE_APPLICATION_CREDENTIALS env variable
+#  Points to: %APPDATA%\gcloud\application_default_credentials.json
 # ============================================================
 
 model_list:
@@ -14,23 +14,23 @@ model_list:
   - model_name: claude-sonnet
     litellm_params:
       model: vertex_ai/claude-sonnet-4-5@20250929
-      vertex_project: "gen-lang-client-0454675031"
+      vertex_project: "mm-hub-pro-490014"
       vertex_location: "global"
       vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
   - model_name: sonnet-4.5
     litellm_params:
       model: vertex_ai/claude-sonnet-4-5@20250929
-      vertex_project: "gen-lang-client-0454675031"
+      vertex_project: "mm-hub-pro-490014"
       vertex_location: "global"
       vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
-  # -- FALLBACK: Gemini 1.5 Flash --
+  # -- FALLBACK: Gemini 2.0 Flash --
   - model_name: gemini-flash
     litellm_params:
       model: vertex_ai/gemini-2.0-flash
-      vertex_project: "gen-lang-client-0454675031"
-      vertex_location: "global"
+      vertex_project: "mm-hub-pro-490014"
+      vertex_location: "us-central1"
       vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
 
 # -- FALLBACK LOGIC --
