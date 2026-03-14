@@ -1,4 +1,4 @@
-@echo off
+﻿@echo off
 chcp 65001 >nul 2>&1
 title OpenClaw Setup — OG.OC_01k
 color 0A
