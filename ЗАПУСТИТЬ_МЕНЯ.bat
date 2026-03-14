@@ -106,7 +106,7 @@ echo ║                                                         ║
 echo ║  Provider : OpenAI-Compatible                          ║
 echo ║  Base URL : http://127.0.0.1:4000                      ║
 echo ║  API Key  : sk-openclaw-local                          ║
-echo ║  Model    : sonnet-4.5                                 ║
+echo ║  Model    : claude-sonnet                              ║
 echo ║                                                         ║
 echo ║  LiteLLM UI: http://127.0.0.1:4000/ui                 ║
 echo ╚══════════════════════════════════════════════════════════╝
