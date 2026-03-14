@@ -136,7 +136,7 @@ if ((Test-Path $configFile) -and -not $Force) {
     OK "config.yaml уже существует: $configFile (пропускаем генерацию)"
     INFO "Используйте -Force для принудительной перезаписи"
 } else {
-    $credsValue = if ($KeyPath) { $KeyPath } else { "os.environ/GOOGLE_APPLICATION_CREDENTIALS" }
+    $credsValue = if ($KeyPath) { $KeyPath -replace '\\','/' } else { "os.environ/GOOGLE_APPLICATION_CREDENTIALS" }
 
     $configContent = @"
 model_list:
@@ -181,7 +181,7 @@ general_settings:
   master_key: "sk-openclaw-local"
 "@
 
-    Set-Content -Path $configFile -Value $configContent
+    [System.IO.File]::WriteAllText($configFile, $configContent, [System.Text.UTF8Encoding]::new($false))
     OK "Конфиг записан: $configFile"
 }
 
@@ -247,9 +247,10 @@ if (Test-Path $cfConfig) {
         }
     } catch { WARN "cloudflared login ещё не выполнен. Выполните: cloudflared tunnel login" }
 
+    $cfDirFwd = $cfDir -replace '\\', '/'
     $cfContent = @"
 tunnel: $tunnelId
-credentials-file: $cfDir\$tunnelId.json
+credentials-file: $cfDirFwd/$tunnelId.json
 
 ingress:
   - hostname: agent.$Domain
@@ -258,7 +259,7 @@ ingress:
     service: http://localhost:3000
   - service: http_status:404
 "@
-    Set-Content -Path $cfConfig -Value $cfContent
+    [System.IO.File]::WriteAllText($cfConfig, $cfContent, [System.Text.UTF8Encoding]::new($false))
     OK "Cloudflare config создан: $cfConfig"
 }
 
