@@ -152,7 +152,7 @@ foreach ($name in $procs) {
     $found = Get-Process $name -ErrorAction SilentlyContinue
     if ($found) {
         $found | ForEach-Object { Log "  ЗАПУЩЕН: $($_.ProcessName)  PID=$($_.Id)  CPU=$($_.CPU)s" }
-    } else { Log "  $name: не запущен" }
+    } else { Log "  ${name}: не запущен" }
 }
 
 # ── 10. LITELLM CONFIG ──────────────────────────────────────
