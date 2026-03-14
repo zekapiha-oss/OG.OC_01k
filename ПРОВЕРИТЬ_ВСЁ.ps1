@@ -16,7 +16,7 @@ function INFO($m) { Write-Host "  → $m" -ForegroundColor Gray }
 function HDR($n,$t) {
     Write-Host ""
     Write-Host ("─"*60) -ForegroundColor DarkCyan
-    Write-Host "  ШАГ $n: $t" -ForegroundColor Cyan
+    Write-Host "  ШАГ ${n}: $t" -ForegroundColor Cyan
     Write-Host ("─"*60) -ForegroundColor DarkCyan
 }
 
