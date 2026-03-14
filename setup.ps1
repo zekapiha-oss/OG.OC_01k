@@ -18,7 +18,7 @@ $ErrorActionPreference = "Stop"
 function Step($n, $title) {
     Write-Host "`n" -NoNewline
     Write-Host ("=" * 60) -ForegroundColor DarkCyan
-    Write-Host "  ШАГ $n: $title" -ForegroundColor Yellow
+    Write-Host "  ШАГ ${n}: $title" -ForegroundColor Yellow
     Write-Host ("=" * 60) -ForegroundColor DarkCyan
 }
 
