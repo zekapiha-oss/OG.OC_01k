@@ -1,40 +1,22 @@
 model_list:
-
-  # -- PRIMARY: Claude Sonnet 4.5 via Vertex AI --
   - model_name: claude-sonnet
     litellm_params:
       model: vertex_ai/claude-sonnet-4-5@20250929
       vertex_project: "gen-lang-client-0454675031"
-      vertex_location: "global"
-      vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
-
-  - model_name: sonnet-4.5
-    litellm_params:
-      model: vertex_ai/claude-sonnet-4-5@20250929
-      vertex_project: "gen-lang-client-0454675031"
-      vertex_location: "global"
-      vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
-
-  # -- FALLBACK: Gemini 2.0 Flash via Vertex AI --
+      vertex_location: "us-east5"
+      vertex_credentials: "C:/Users/Евгений/OneDrive/Документи/kovalenko_ev/gen-lang-client-0454675031-93bb04c52e8a.json"
   - model_name: gemini-flash
     litellm_params:
-      model: vertex_ai/gemini-2.0-flash-001
+      model: vertex_ai/gemini-1.5-flash
       vertex_project: "gen-lang-client-0454675031"
       vertex_location: "us-central1"
-      vertex_credentials: "os.environ/GOOGLE_APPLICATION_CREDENTIALS"
-
+      vertex_credentials: "C:/Users/Евгений/OneDrive/Документи/kovalenko_ev/gen-lang-client-0454675031-93bb04c52e8a.json"
 router_settings:
-  fallbacks:
-    - claude-sonnet: ["gemini-flash"]
-    - sonnet-4.5: ["gemini-flash"]
-  num_retries: 3
-  retry_after: 5
-
+  num_retries: 2
 litellm_settings:
   max_budget: 199.00
   budget_duration: "3mo"
-  set_verbose: false
   drop_params: true
-
 general_settings:
   master_key: "sk-openclaw-local"
+  default_model: "claude-sonnet"
